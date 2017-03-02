@@ -3,23 +3,37 @@
 
 \addcontentsline{toc}{chapter}{Summary} % da aggiungere comunque all'indice
 
-The IT world is evolving faster and faster every year, with new breaking technologies coming to our lives, even changing our way to communicate and live in our society. With the advent of social networks, cloud storage and computing, a new definition for the amount of data they involve has been coined: Big Data.
+The IT world is evolving faster and faster every year, with new breaking technologies coming to our lives, even changing our way to communicate and live in our society. With the advent of social networks, cloud storage and computing, a new definition for the amount of data they involve has been coined: \textsc{Big Data}\footnote{https://datascience.berkeley.edu/what-is-big-data/}.
 The challenge of Big Data involves both developing better retrieving solutions using advanced data mining techniques and functional storage solutions.
 Several companies are switching their old systems and technologies to more scalable and reliable solutions to optimize their costs in terms of time and money, improving their profits.
-The company in which I am actually working entrusted me to develop a software in order to evaluate MongoDB, a new non-relational database technology in  anticipation of a new  contract from a customer that needs to support an application with several hundred thousand of users and millions of records.
+The company in which I am actually working entrusted me to develop a software in order to evaluate \textsc{MongoDB} \footnote{https://www.mongodb.com/what-is-mongodb}, a new non-relational database technology in  anticipation of a new  contract from a customer that needs to support an application with several hundred thousand of users and millions of records.
 The challenge is to obtain acceptable results from Mongo in stressing conditions like a production software: retrieving data in less than 2 seconds, preventing loss of data and most importantly, preventing a system crash of the database.
 I entirely developed a Java software based on the Spring framework, following my project leader and my tutor directives, capable of launching specific benchmark tests aimed at stress-testing and maybe even crashing a virtual machine running a MongoDB instance.
-For my architecture used the technique of Microservices, that consists in building a modular application, with each module dedicated to a specific service. It is an advanced development technique that is getting more and more successful, also thanks to famous use cases such as Netflix, with the strength of easy reusability and maintainability of the software.
+For my architecture used the technique of \textsc{Microservices} \footnote{http://microservices.io/patterns/microservices.html}, that consists in building a modular application, with each module dedicated to a specific service. It is an advanced development technique that is getting more and more successful, also thanks to famous use cases such as Netflix, with the strength of easy reusability and maintainability of the software.
 My choice of this technique is due to a possible future experimentation of other storage technologies, even relational, as the modularity of the applications allow to quickly develop and connect a new module with drivers for other Database Management Systems.
 The choice of MongoDB was made by both our manager and our customer because of its ease of configuration and its availability as 
 an open-source software.
-
-%\begin{itemize}
-%  \item contesto e motivazioni 
- % \item breve riassunto del problema affrontato
- % \item tecniche utilizzate e/o sviluppate
-  %\item risultati raggiunti, sottolineando il contributo personale del laureando/a
-%\end{itemize}
+This research aims to explain many reasons why NoSQL technologies are taking over the well-known relational databases in new enterprise applications, focusing on selected use cases.
+In particular, I have been committed to develop a software that could perform a stress-test on MongoDB to verify if it could stand the customer requirements.
+The team involved 3 persons:
+\begin{itemize}
+  \item me as direct developer.
+  \item an internal System Engineer that helped me configuring MongoDB instances on different nodes (depending on the test requirements) and configuring the virtual machines that have been used through the evaluation.
+  \item an internal Software Engineer, my stage tutor, that helped me define the architecture of the application and choose the right frameworks for both backend and frontend. He also contributed in defining test cases and testing the functionalities of the software.
+\end{itemize}
+To clarify, the research does not demonstrate that NoSQL technologies are a better choice than Relational DBMS in any case, nor that the relational databases will get outdated and out of use.
+In fact, both of them have strenghts and weaknesses based on the situation in which they are used.
+The future of databases will likely involve the parallel use of different technologies or maybe a "fusion" like, for example, NewSQL databases that are currently under experimental development.
+But even tough relational databases are not going to disappear soon, we will explain why NoSQL are really taking over them in the highly demanding requests of the new market of Big Data challenging applications in terms of high scalability, usability and performance.
+This will likely lead to a relegation of Relational DBMS to specific roles in a system or to specific use cases in which they still have better reliability or even better performance than NoSQL regardless their higher cost of configuration and maintainability and their restrictions as explained by the \textit{CAP theorem} \footnote{Also named Brewer's theorem, will be explained in chapter 2}.
+\textsc{MongoDb Performcance} was developed entirely in Java on the backend side, while the frontend side was developed in Html 5, Css and Javascript.
+It depends on several frameworks and libraries, among which the most relevant are:
+\begin{itemize}
+    \item \textit{Java Spring} \footnote{https://spring.io/} - The future of Java Development, based on REST calls and Annotations.
+    \item \textit{AngularJS} \footnote{https://angularjs.org/} - An essential web framework to build single page application with dynamic loading of contents, used in combination with \textit{Twitter Bootstrap} \footnote{http://getbootstrap.com/}.
+    \item \textit{MetricsGraphics.js}\footnote{http://www.metricsgraphicsjs.org/} - A versatile Javascript framework based on D3, used to plot data.
+\end{itemize}
+The code of the project can be visualized on GitHub \footnote{https://github.com/BRomans/mongodb-performance-app} only after authorization as its property rights are owned by the company.
 
 
 
