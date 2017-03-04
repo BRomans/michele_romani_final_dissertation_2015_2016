@@ -5,20 +5,114 @@ Following there is a deep description of many Mongo core features mostly taken f
 
 \section{MongoDB}
 \label{sec:1}
+In evaluating which NoSQL technology could be the best for our company we aimed for a combination between the best performance,  ease of use and understandability of the product as we had no real expert in this field.
+This is probably the main reason that made us put Cassandra as secondary makeshift in the evaluation.
+Thanks to his functionalities Mongo was the first choice for evaluation: its JSON-like format for data called BSON \footnote{See section 2.2.1} and the simple configuration of its nodes made him the perfect candidate.
+Many built-in functions of Mongo automatize the setup of a server and the creation of collections, for example if you try to \textit{insert} a document inside an undefined collection \textit{foo}, Mongo will automatically create this new collection called \textit{foo}.
+If you connect to a new database in a Mongo instance and start inserting data, it will automatically create the schema, the collections and give a unique\textit{\_id} to each one of them  with no need of manual interaction from the developer.
+MongoDB derives its name from \textit{“humungous”} which means enormous and it fits the idea of application that it was designed to support.
+Its data records (or rows) are called \textit{documents} and are stored in tables called \textit{collections}. So when you insert something into a Mongo database you are adding document X to collection Y.
+A collection does not require the same schema for all its documents, some of them can have more or less fields than others, but in case of need it is possible to enforce document validation rules in order to accept only documents with the desired schema.
 
 \section{Key features of Mongo}
 \label{sec:2}
-
+In this section we introduce all the main features offered by Mongo by default, with a broad overview on them. 
+Then we analyze more deeply how Mongo implements those features giving some examples of their usage.
 
 \subsection{BSON data object}
+As explained before Mongo uses the BSON \footnote{Binary JavaScript Object Notation - http://bsonspec.org/} documents that are a binary representation for JSON documents, but with more data types.
+The\textit{\_id} field is reserved to be used as a primary key and its value must be unique in the collection and of any type other than array.
+There are other restrictions on field names: field names cannot start with the dollar “\$” character and not even with the dot “.” character because Mongo uses \textit{dot notation} to access elements of an array or to access the fields of embedded documents.
+There is a maximum size for BSON documents of 16 Megabytes. This is to ensure that a single document does not use an excessive amount of RAM, since Mongo uses mostly RAM during its execution, or bandwidth while sending data.
+\newpage
+There is of course the possibility to store bigger documents with \textit{GridFS API} \footnote{https://www.compose.com/articles/gridfs-and-mongodb-pros-and-cons} provided by Mongo developer team, but it the case of our evaluation it was not needed as we used a relatively small schema for our default document “Fattura”, shown in the previous example, that is a simplification of the billing documents used in our customer’s software.
+Here an example of how a BSON Mongo document looks like, based on the model used in our tests:
+\begin{lstlisting}
+{
+        "_id" : ObjectId("588cc30072dd84338cbdec77"),
+        "_class" : "it.tai.domain.Fattura",
+        "rIndex" : NumberLong(2264826),
+        "firstName" : "Michele",
+        "lastName" : "Romani",
+        "company" : "Tai Software Solutions",
+        "taxCode" : "01020304569",
+        "vatCode" : "RMNMHL93R28A470U",
+        "address" : "Via Monviso 16",
+        "municipality" : "Asola",
+        "province" : "MN",
+        "phone" : "+39 333 3117688",
+        "zipCode" : "46041",
+        "birthday" : "28-10-1993",
+        "username" : "mromani",
+        "password" : "ypaLLdNYSOKvaBQNreWyUvGp",
+        "email" : "mromani@tai.it"
+}
+\end{lstlisting}
 
 \subsection{Rich Query Language and CRUD operations}
+Mongo provides its own query language that, like the majority of NoSQL databases, is not based on SQL. All its CRUD operations (Create, Read, Update, Delete) are \textit{atomic} on the level of a single document and target a single collection.
+For Create operations Mongo uses the following methods:
+\begin{itemize}
+	\item \textit{Db.collection.insert( )}
+	\item \textit{Db.collection.insertOne( )}
+	\item \textit{Db.collection.insertMany( )}
+\end{itemize}
+And their names easily explain their function.
+For Read operations Mongo uses the method \textit{db.collection.find( )} in which is possible to specify query filters or criteria using defined operators such as \textit{\$aggregation, \$min, \$max, \$gt, \$lt} and many others that is possible to find in Mongo official documentation.
+For Update operations Mongo can identify which documents to update using same syntax as read operations. Those methods then perform the update:
+\begin{itemize}
+	\item \textit{Db.collection.update( )}
+	\item \textit{Db.collection.updateOne( )}
+	\item \textit{Db.collection.updateMany( )}
+	\item \textit{Db.collection.replaceOne( )}
+\end{itemize}
+Like Create operations, those methods explain themselves with their name. The upsert operation is performed by specifying its parameter as true.
+At last, Delete operations uses the same criteria as Read and Update operations with the following methods:
+\begin{itemize}
+	\item \textit{Db.collection.remove( )}
+	\item \textit{Db.collection.deleteOne( )}
+	\item \textit{Db.collection.deleteMany( )}
+\end{itemize}
+
+It is very simple to create query data using those methods as they only need some parameters to work. The more basic usage just needs the \textit{\_id} of the target document as only parameter to work.
+This is an example of a query that uses an operator to perform a simple research:
+\begin{lstlisting}
+/* Query on a collection named 'school' to select students between letter M and Z */
+db.school.find({
+	students: {
+		$in: [ "M", "Z"]
+	}
+});
+
+/* Translated in SQL language */
+
+SELECT * FROM school WHERE students in ("M", "Z");
+\end{lstlisting}
+
+Each parameter in a Mongo method is wrapped between {} braces and more parameters can be nested with inner {} braces. 
+This is basically how Mongo performs CRUD operations on data. For more examples on how querying embedded documents or arrays it is possible to consult Mongo documentation for further examples.
 
 \subsection {Availability and scalability}
-
+In Mongo, it is possible to obtain high availability thanks to \textit{Replica Set} \footnote{See section 2.6}, a replication facility that provides \textit{automatic failover} and \textit{data redundancy}. In substance, it is a set of Mongo servers (or nodes) that store the same data set, increasing data availability.
+For horizontal scalability instead, Mongo’s core functionality is \textit{Sharding} \footnote{See section 2.7}, a facility that distributes data across a cluster of machine using a \textit{Shard Key} to balance data. In latest versions, it is even possible to create zones of data that use the \textit{Shard Key} to direct Mongo operations, covered by a particular zone, only to the shards inside that zone.
 
 \section{Indexes}
 \label{sec:3}
+Indexes are a special data structure used to store a specific field or set, ordered by its value and they are fundamental for Mongo to perform at its best. This allow to support efficient equality matches and range-based query operations and they can be easily used to sort results with low computational cost.
+Every collection has an unique default index \textit{\_id}, created during the creation of the collection and, if not specified in other ways, calculated on the timestamp of the operative system. It is the primary key of the collection and it prevents clients from inserting duplicates, consequently it cannot be dropped. 
+In sharded clusters \textit{\_id} is usually used as default \textit{Shard Key} \footnote{See section 2.7.2}, if another field is specified then it must be enforced to be unique.
+Indexes typologies are:
+\begin{itemize}
+	\item \textit{Single Field Index} : classic index on a single field, it can be traversed in both directions for sorting.
+	\item \textit{Compound Index} : index on multiple fields, during creation the sorting order must be specified for each field, having 1 for ascending order and  -1 for descending, then they are sequentially applied.
+	\item \textit{Multikey Index} : when a compound index holds an array value then it becomes a multikey index having a different key on each element of the array for many combination with other fields within the index. It is not possible to have more than an array field in an index of this type.
+	\item \textit{Geospatial Index} : index that is used for geospatial coordinate data, they can be 2d indexes for planar geography or 2dsphere for spherical geometry.
+	\item \textit{Text Index} : an index that supports searching for string content, but it can only store ‘root’ words, for example it cannot store prepositions like “the”, “a”, “or” etc.
+	\item \textit{Hashed Index} : this index is used to support has based sharding so it indexes the hash of the value of a field. It can be used only for equality matches and cannot support range-based queries.
+\end{itemize}
+\textit{Hashed Indexes} are very important for Mongo scalability on multiple nodes 
+and they have been used in the evaluation to support all tests with a multi node database. They use a hashing function that collapses embedded documents and then computes the hash for the entire value.
+Since Mongo automatically computes the hashes when resolving queries, user applications do not need to compute them obtaining higher performance
 
 \section{Storage Engines}
 \label{sec:4}
