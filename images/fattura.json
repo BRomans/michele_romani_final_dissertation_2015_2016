@@ -1,0 +1,19 @@
+{
+        "_id" : ObjectId("588cc30072dd84338cbdec77"),
+        "_class" : "it.tai.domain.Fattura",
+        "rIndex" : NumberLong(2264826),
+        "firstName" : "Michele",
+        "lastName" : "Romani",
+        "company" : "Tai Software Solutions",
+        "taxCode" : "01020304569",
+        "vatCode" : "RMNMHL93R28A470U",
+        "address" : "Via Monviso 16",
+        "municipality" : "Asola",
+        "province" : "MN",
+        "phone" : "+39 333 3117688",
+        "zipCode" : "46041",
+        "birthday" : "28-10-1993",
+        "username" : "mromani",
+        "password" : "ypaLLdNYSOKvaBQNreWyUvGp",
+        "email" : "mromani@tai.it"
+}

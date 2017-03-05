@@ -116,6 +116,16 @@ Since Mongo automatically computes the hashes when resolving queries, user appli
 
 \section{Storage Engines}
 \label{sec:4}
+A storage engine is the component of a database managment system responsible of data storaging on disk or in memory. Mongo supports 3 storage engines with different performance depending on specific workloads:
+\begin{itemize}
+	\item \textit{Wired Tiger} - It is now the default storage engine and provides a document-level concurrency model, also called \textit{checkpointing} and a data compression function that minimizes storage use at the cost of additional CPU.
+\textit{Checkpoints} are snapshot of the data saved automatically by Mongo every 60 seconds or after 2 gigabytes of journal data. Thanks to \textit{Wired Tiger}, Mongo can recover data from last checkpoint event without \textit{journaling} data, but wil lose of course any data written after last checkpoint.
+\textit{Journal} is a write-ahead transaction log that persists all data modifications between checkpoints and in \textit{Wired Tiger} is active by default, allowing complete data recovery togheter with \textit{checkpoints}.
+By default Wired Tiger internal cache uses 50\% of available RAM - 1 GB or 256 MB.
+	\item \textit{MMAPv1} - It is  the original storage engine of Mongo and it is still a good choice for worloads with high volume of operations (inserts, reads, updates). It is based on memory mapped files and, like \textit{Wired Tiger}, it uses \textit{Journal} to ensure that every modification  to Mongo data sets are durably written on disk.
+With\textit{MMAPv1} Mongo uses the power of 2 sizes allocation so each file has a size that is a power of 2 (32, 64, 128...). The advantages of this strategy are in reducing fragmentation thanks to efficient reuse of freed records and reducing moves thanks to the added padding space given to documents allowing them to grow without requiring a move.
+	\item \textit{In-Memory Storage Engine} - 
+\end{itemize}
 
 
 \section{Security}

@@ -58,5 +58,67 @@ The architecture was designed to be reusable and extensible following the theory
 \end{itemize}
 
 \subsection{User Interface module}
+The \textit{UI Module} is a standalone Java Spring application that serves all the static content, libraries and web pages, to a localhost server where the user can login and start using the application. There is a single web page where the content is dynamically loaded using AngularJS routing through modules.
+The Login Page does not allow a non-authenticated user to use the application, and its functionality is provided by \textit{auth.js} angular module. After correct login, it is possible to start navigating other sections.
+\begin{figure}[H]
+\includegraphics[scale=0.5]{login.png}
+\centering
+\caption{The Login page.}
+\end{figure}
+The \textit{Home Page} simply introduce the user to the application with a welcoming message.
+The \textit{Status Page} is  a page that launches a REST \footnote{https://en.wikipedia.org/wiki/Representational\_state\_transfer} call to all modules that are supposed to be in the application to check and monitor their status, then it prompt the result on screen. It makes easy to discover if a module, even running on another machine, is not answering allowing the user to quickly resolve the problem.
+\begin{figure}[H]
+\includegraphics[scale=0.5]{status.png}
+\centering
+\caption{The Status page.}
+\end{figure}
+\newpage
+The\textit{MongoDB Page} is the most important of this module and  it is the page where the user can setup the configuration for a new test.
+It is possible to choose:
+\begin{itemize}
+	\item The\textit{ number of entries} or inserts that has to be performed during the whole test
+	\item The \textit{number of threads}, each one simulates a new client connecting to the MongoDB node. It is important to specify that the number of entries of each thread will be the total number of entries / the total number of threads. There is no real limit to the number that can be set, but a normal notebook will begin to suffer with more than 8 threads as the Java Virtual Machine is pretty expensive on the CPU and on the RAM. We will see further the specifications of the machines used during the experiment and how many threads have been used for the test.
+	\item The \textit{type of test}, using only \textsc{put} statements (only inserts), only \textsc{get} statements (only gets, never used in practice) or \textsc{put/get} statements (one insert and then one get for each entry).
+	\item The \textit{IP address} of the machine or computer running an instance of the Resource Module, to choose where start a test or to monitor an already running test on a specific machine.
+\end{itemize}
+\begin{figure}[H]
+\includegraphics[scale=0.3]{test-off.png}
+\centering
+\caption{The MongoDB page.}
+\end{figure}
+It is  possible to drop all the records in the database to clean it up before a new test using the button “ClearDB”. When everything is set up, or using default values, it is possible to “Launch” the test and open  new view that shows any possible information about the running test. It is important to specify that in absence of a responding Resource Module, the test won’t start because all the metrics are calculated in that module and fetched through REST calls.
+If everything is correctly set up, the test will start and all metrics calculated on Mongo are fetched and showed in the top table.
+\begin{figure}[H]
+\includegraphics[scale=0.4]{metriche.png}
+\centering
+\caption{Table of the metrics.}
+\end{figure}
+It is possible to plot  the most interesting metrics in real time with “AutoDraw”  , but this option is disabled by default due to the heavy cost in terms of memory for the computer. It is anyway possible to plot metrics at the end of the test with “Draw” because all data are saved in variables until the test is not stopped. All graphs and tables that will be presented in the tests have been plotted by the application and saved at the end of each test.
+\begin{figure}[H]
+\includegraphics[scale=0.6]{grafici_corretti.png}
+\centering
+\caption{Graphics of Min/Max Put/Get times.}
+\end{figure}
+\begin{figure}[H]
+\includegraphics[scale=0.6]{queries_corrette.png}
+\centering
+\caption{Graphic of Throughput and query commands.}
+\end{figure}
+At the bottom of the page there are two buttons that can launch specific queries:
+\begin{itemize}
+	\item \textit{countAll( )} - Query that returns all the current records in the database. The main reason for this was to double check the insertions and see if they matched the values printed in the metrics table.
+	\item \textit{complexQuery( )} - Query with the purpose to stress the  process of insert and get of the entries, it was used in specific tests with heavy workload and its times of execution where saved and then plotted in a secondary moment. When launched in “Auto” it runs every 10 seconds and updates an array containing all the execution times that will be plotted.\footnote{See section 4.4}
+\end{itemize}
+
+
 
 \subsection{MongoDB Resource module}
+This is the core module of the application. All endpoints for the REST calls from the UI Module are defined and connected to a specific function in this module. It is not necessary to have an UI Module to run a test since it is possible to launch the standalone .jar of the Resource Module from command line and setup a test following the options printed on screen. It is possible to print some metrics on the console, but this functionality has never been used during the benchmark due to the necessity of plotting data on the UI.
+\begin{figure}[H]
+\includegraphics[scale=0.4]{command-line.png}
+\centering
+\caption{The Resource Module in the Linux shell.}
+\end{figure}
+It is possible to connect the UI Module to different instances of the Resource Modules even running of different machines to fetch all possible data, and this is how the tests have been conducted.
+In this module is also defined the structure of \textit{Fattura.java}, the type of document used for the tests, and the repository that connects to the MongoDB collection Test where the data are stored. The core class of the module is \textit{MockLoadService.java} where resides the algorithm that process the benchmark and where all the metrics are calculated and saved.
+The algorithm takes as parameters the number of entries, the type of test and most important the number of threads; then for each thread it replicates the process simulating a new client connection on the database.
