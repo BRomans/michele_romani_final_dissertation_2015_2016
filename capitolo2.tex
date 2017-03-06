@@ -24,7 +24,6 @@ As explained before Mongo uses the BSON \footnote{Binary JavaScript Object Notat
 The\textit{\_id} field is reserved to be used as a primary key and its value must be unique in the collection and of any type other than array.
 There are other restrictions on field names: field names cannot start with the dollar “\$” character and not even with the dot “.” character because Mongo uses \textit{dot notation} to access elements of an array or to access the fields of embedded documents.
 There is a maximum size for BSON documents of 16 Megabytes. This is to ensure that a single document does not use an excessive amount of RAM, since Mongo uses mostly RAM during its execution, or bandwidth while sending data.
-\newpage
 There is of course the possibility to store bigger documents with \textit{GridFS API} \footnote{https://www.compose.com/articles/gridfs-and-mongodb-pros-and-cons} provided by Mongo developer team, but it the case of our evaluation it was not needed as we used a relatively small schema for our default document “Fattura”, shown in the previous example, that is a simplification of the billing documents used in our customer’s software.
 Here an example of how a BSON Mongo document looks like, based on the model used in our tests:
 \begin{lstlisting}
@@ -124,38 +123,42 @@ A storage engine is the component of a database managment system responsible of 
 By default Wired Tiger internal cache uses 50\% of available RAM - 1 GB or 256 MB.
 	\item \textit{MMAPv1} - It is  the original storage engine of Mongo and it is still a good choice for worloads with high volume of operations (inserts, reads, updates). It is based on memory mapped files and, like \textit{Wired Tiger}, it uses \textit{Journal} to ensure that every modification  to Mongo data sets are durably written on disk.
 With\textit{MMAPv1} Mongo uses the power of 2 sizes allocation so each file has a size that is a power of 2 (32, 64, 128...). The advantages of this strategy are in reducing fragmentation thanks to efficient reuse of freed records and reducing moves thanks to the added padding space given to documents allowing them to grow without requiring a move.
-	\item \textit{In-Memory Storage Engine} - 
+	\item \textit{In-Memory Storage Engine} - It is an enterprise evolution that retains data in-memory for more predictable data latencies that uses document-level concurrency control for write operations. Multiple clients can modify different documents of a collection at the same time as results of this implementation
 \end{itemize}
 
-
-\section{Security}
+\section{High Availability}
 \label{sec:5}
 
-
-\section{High Availability}
-\label{sec:6}
-
 \subsection{Replica Set and Server Selection Algorithm}
+\textit{Replica Set} is a group of \textit{mongod} \footnote{https://docs.mongodb.com/manual/reference/program/mongod}instances that mantain a replicated data set. The purpose is to provide redundancy an high availability of data as base for a production deployment. Copies of data are spread on different database servers and is completely fault tolerant against the loss of one or more nodes depending on the total number of replicated servers \footnote{At least one server needs to be active.}.
+Clients can send read operations to multiple servers allowing increased read capacity. Mongo provides two operators \textit{w} that represents the setting to confirm a write operation and \textit{j} that represents the write operation on \textit{Journal} \footnote{https://docs.mongodb.com/manual/core/journaling}.
+In Mongo by default w:true and j:false, but in a Replica Set  usually journaling should be active and there can be a primary node with w:majority that means that the write concern is sent to all the memebers of the set.
+If a primary node fails the \textit{Selection Algorithm} starts the election of  a new primary between the other members, using an \textit{Arbiter} \footnote{A node with no data set and no dedicated hardware} in case they are even, and when the old primary recovers it will become a secondary.
 
 \subsection{Automatic failover and data redundancy}
-
+After 10 seconds if a primary node does not communicate with other members, they start the election of a new primary. This operation is called \textit{Automatic Failover} and usually takes less than 30 seconds to declare "inaccessible" a primary node and other 10-30 seconds to complete the election.
+After this operation if the old primary recovers as secondary it may have outdated data, so it sends a requests to other members to receive an eventual update of its data set.
+It may happen that before the Automatic Failover starts the client is still trying to send data to the open connection of the "dead" primary node, in this case all rejeceted documents are saved in a special snapshot that needs to be manually restored into the database.
 
 \section{Horizontal Scalability}
-\label{sec:7}
+\label{sec:6}
 
-\subsection{Nodes}
+\subsection{Nodes and Shard Keys}
+There two ways for addressing system growth: \textit{Vertical Scaling} and \textit{Horizontal Scaling}. Mongo uses \textit{Sharding} to distribute very larg data sets among nodes horizontally distributed, with a sensible gain in performance.
+Horizontal Scalability is in fact more efficient than Vertical because it does not require great performance on single machines but only speed and capacity overall the entire system. The trade-off with these advantages is an increased complexity in infrastructure and maintenance of the system,
+\textit{Shards} are subsets of sharded data and each shard can be deployed as a replica set with a \textit{mongos} instance, a query router that provides an interface between clients and the sharded cluster.
+Configuration settings and metadata of the cluster must be stored in a special server called \textit{Config Server} \footnote{https://docs.mongodb.com/manual/core/sharded-cluster-config-servers}.
+When sharding, the user must provide a \textit{Shard Key}\footnote{In case of a not-empty colletion there must be an index that starts with the Shard Key} to Mongo that is a field of the collection that is used to partion data into \textit{chuncks}. Choosing a good shard key may heavily affect performance (either in a positive or negative way) since it will be based on the content of the key. For example an increasing value in a Shard Key will produce unbalanced chunks, requiring the balancer to acheive an even balance of the chunks in a secondary moment across all shards and slowing the entire database.
 
-\subsection{Shard Keys}
+\subsection{Hashed Sharding, Ranged Sharding, Zones}
+There are two ways to shard in Mongo. With \textit{Hashed Sharding} it computes the hash of the shard key field's value and then each chunk is assigned to a range based on the hash of the Shard Key. This kind of distribution improve data distribution, especially if the Shard Key of the data set changes monotonically.
+In case of ranged-based queries on the Shard Key it is better to implement a \textit{Ranged Sharding} that divides data into ranges based on the normal Shard Key field's value. Consequently, a range of those keys whose values are "close" will probably reside on the same chunk, allowing targeted operations. \textit{Mongos} will route these operations only to the shards that contain the required data the performance will increase.
+Also in this case a bad choice of the shard key may lead to uneven distribution of data, or even bottlenecks.
+It is possibile to create \textit{Zones} of sharded data based on the Shard Key to improve the locality of data. Each Zone can be associated with one or more shards of the cluster and each shard can associate with any number of non-conflicting Zones.
+If the cluster is balanced, Mongo will move chunks covered by a Zone only to the shards associated with the same Zone. As it is not possible to change the Shard Key after sharding the colletction, it is good practice to consider the possibility of zone sharding before sharding. In case the Shard Key is compund, the range of the zone must include its prefix.
 
-\subsection{Hashed Sharding}
-
-\subsection{Ranged Sharding}
-
-\subsection{Zones}
-
-
-\section{Some use cases}
-\label{sec:8}
+%\section{Some use cases}
+%\label{sec:7}
 
 
 

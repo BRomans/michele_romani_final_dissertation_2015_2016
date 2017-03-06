@@ -15,14 +15,15 @@ The following virtual machines are part of the evironment:
 	\item \textit{vm03-st} running the MongoDB Resource standalone module with the following specifications - CPU: QEMU Dualcore @1800Mhz, RAM: 4Gb, HDD: 5,3Gb.
 \end{itemize}
 \begin{figure}[H]
-\includegraphics[scale=0.6]{my_architecture.png}
+\includegraphics[scale=0.5]{my_architecture.png}
 \centering
-\caption{Rappresentation of the environment of testing.}
+\caption{Representation of the environment of testing.}
 \end{figure}
 All the virtual machines were running a Linux distribution, CentOS, and they were controlled simultaneously using Putty. On every  client machine an instance of the MongoDB Resource Module was running on the Linux shell with same test configuration.
 On the machines hosting the Mongo nodes, Mongo had two different configurations: 
-\begin{itemize}
-	\item The primary node was running a \textit{mongod} \footnote{mongod} instance with 2 different \textit{config servers} \footnote{config server}. This configuration allowed to quickly switch from a single- node configuration to a double-node (or more) configuration.
+
+
+The primary node was running a \textit{mongod} \footnote{See section 2.5} instance with 2 different \textit{config servers} \footnote{See section 2.6}. This configuration allowed to quickly switch from a single- node configuration to a double-node (or more) configuration.
 \begin{lstlisting}
 # mongod.conf
 
@@ -69,8 +70,9 @@ net:
 
 #snmp:
 \end{lstlisting}
-\newpage
- 	\item The second node was running a \textit{mongos} instance instead, that automatically connects to the primary node in case the configuration for 2 nodes is set. \textit{Replica Set} was not enabled because in a benchmark test it would only affect performance and it usually is a production choice where it could provide consistency and durability of the data.
+
+
+The secondary node was running a \textit{mongos} instance instead, that automatically connects to the primary node in case the configuration for 2 nodes is set. \textit{Replica Set} was not enabled because in a benchmark test it would only affect performance and it usually is a production choice where it could provide consistency and durability of the data.
 \begin{lstlisting}
 # mongos.conf
 
@@ -118,7 +120,7 @@ sharding:
 
 #snmp:
 \end{lstlisting}
-\end{itemize}
+
  
 \section{Test cases and setup}
 \label{sec:2}
@@ -156,7 +158,9 @@ There are some approximations in the metrics presented in the \textit{Summary pa
 	\item \textit{Test Duration} : it refers to the time taken by the slowest machine of each test to complete the workload. It is not the time used to calculate \textit{Throughput}.
 	\item \textit{Avg Put/Get Times} : those are the average of the Average Put/Get Times calculated on each machine in a test.
 	\item \textit{Max and Min Put/Get TImes} : those are the maximum and the minimum put/get times overall of a test.
-	\item \textit{Throughput} : it is the average the Throughputs calculated on each machine in a test, so for example if a machine took time ‘T’ to perform ‘n’ operations on ‘i’ machines, the formula to obtain this final throughput is: %%inserisci formula%%
+	\item \textit{Throughput} : it is the average the Throughputs calculated on each machine in a test, so for example if a machine took time ‘T’ to perform ‘n’ operations on ‘i’ machines, the formula to obtain this final throughput is: 
+\[Throughput = \frac{\sum_{0}^{i}\frac{n_{i}}{T_{i}}}{i}\]
+
 \end{itemize}
 Now that we have defined the meaning of those values, we can analyze the most significant tests.
 \subsection{Which tests will be analyzed}
@@ -171,17 +175,57 @@ Anyway, all machines that completely performed their workload have been kept in 
 
 \subsection{Results}
 In this table are gathered the most relevant results from the analysis spreadsheet, cleaned from all not necessary columns and details.
+\begin{figure}[H]
+\includegraphics[scale=0.4]{table.png}
+\centering
+\caption{Summary of the analyzed metrics.}
+\end{figure}
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+%\begin{table}[]
+%\centering
+%\begin{tabular}{cccccccccccc}
+%\hline
+%\rowcolor[HTML]{BBDAFF} 
+%\textbf{Test} & \textbf{Threads} & \textbf{Nodes} & \textbf{Entries} & \textbf{Duration(s)} & \textbf{Avg Put Time(ms)} & \textbf{Avg Get Time(ms)} & \textbf{Max Put Time(ms)} & \textbf{Min Put Time(ms)} & \textbf{Max Get Time(ms)} & \textbf{Min Get Time(ms)} & \textbf{Throughput (op/s)} \\ \hline
+%\rowcolor[HTML]{FFCE93} 
+%1 & 1 & 1 & 200.000 & 5.298 & 14 & 18 & 10.902 & 14 & 10.907 & 18 & 75,50019 \\
+%\rowcolor[HTML]{FFCE93} 
+%4 & 35 & 1 & 2.000.000 & 9.074 & 29,8 & 34,4 & 5.004 & 18 & 5.113 & 21 & 190,87396 \\
+%\rowcolor[HTML]{FFCE93} 
+%6 & 35 & 2 & 2.000.000 & 8.440 & 28,85 & 31,53 & 1.651 & 14 & 1.691 & 16 & 195,43104 \\
+%\rowcolor[HTML]{FFCE93} 
+%10 & 35 & 2 & 2.000.000 & 8.047 & 28,8 & 31,4 & 1.422 & 18 & 1.531 & 21 & 195,28309 \\ \hline
+%\end{tabular}
+%\caption{My caption}
+%\label{my-label}
+%\end{table}
 
-%%inserire tabella%%
-
-All of those tests run with a 50 – 50 workload, that means that half of the operation were \textit{put} operations and the other half \textit{get} operations, for example having 200.000 entries means that 400.000 operations are performed during the test.
+All of those tests run with a 50 – 50 workload type, meaning that half of the operation were \textit{put} operations and the other half \textit{get} operations, for example having 200.000 entries means that 400.000 operations are performed during the test.
 There are three different typologies of test \footnote{See section 4.2} so we analyze at least one test for each typology: Test 1 belongs to the First Type and so it was just a functional test with a small workloadload performed on a Mongo database with 1 node. It obtained a \textit{Max Put Time} and a \textit{Max Get Time} of more than 10 seconds, but some considerations should be taken in account:
 \begin{itemize}
 	\item Each \textit{get} operation happen after a \textit{put} operation, so it’s reasonable to assume that \textit{Max Get Time} of 10.907 ms is  the result of \textit{Max Put Time} + 5 ms footnote{In simple words, get time is anyway acceptable}.
 	\item \textit{Avg Put Time} and \textit{Avg Get Time} stay on really low values, respectively 14 ms and 18 ms, that in first place satisfies the customer requisite of 2 seconds to retrieve data from the database. In second place it means that since they are average values and they do not appear to be affected by \textit{Max Put/Get Time},  those “worse" cases are just a very few over the total operations performed.
 \end{itemize}
-
-
+\textit{Test 4} and \textit{Test 6} belong to the Second Type, they are stress tests performed with same configuration. In total they execute 2 million entries \footnote {4.000.000 operations with this type of workload} running 35 parallel threads with all virtual machines available. The only difference between them is that \textit{Test 4} runs on a Mongo database with 1 node while \textit{Test 6} runs on a Mongo database with 2 nodes and a Shard Key on the \textit{\_id} field.
+It is possible to appreciate how Mongo scales well horizontally by adding nodes to its configuration. First, \textit{Duration} is a bit shorter and \textit{Avg Put/Get Times} are slightly better. Most important is that with multiple nodes none of the operations took more than 1,7 seconds to execute. This means that Mongo manages concurrency more efficiently with more nodes, that is what we expected in terms of scalability and distribution of data. In the average, Mongo performed 5 more operations each second using 2 nodes.
+At last, \textit{Test 10} belongs to Third Type and was performed with the same configuration as \textit{Test 6} \footnote{35 threads, 2 millions entries, 2 nodes}, but with an additional single field index on the field \textit{rIndex}, containing a random generated number between 0 and 3.000.000.
+During this test along with other operations, a "Complex Query" have been automatically executed every 10 seconds for a total of 750 times on the database. This query takes a random number  R between 0 and 2.999.900 and retrieves all the documents having  \textit{rIndex} in the set \{R , R+100\}.
+With the progressive increase of \textit{n} as total number of documents in the database, the query takes increasing average time to execute. 
+The following chart represents all execution times of the query over the total executions.
+\begin{figure}[H]
+\includegraphics[scale=0.6]{exec_times_new.png}
+\centering
+\caption{Query execution times.}
+\end{figure}
+The average time of execution appears to increase following a logarithmic curve and this is consistent with MongoDB implementation of data structures research .
+In fact, Mongo uses B+ Trees as data structure and consequently the complexity of a \textit{find( )} function is O(logn).
+This great result obviously has a cost: \textit{Min Put/Get Times} have a worse performance in our benchmark  because of the secondary index on \textit{rIndex}. 
+Even if  there are not evident differences in the \textit{Avg Put/Get Times}, the \textit{Throughput} slightly decreases and probably with a higher number of documents it would become more perceptible.
+In a production software anyway there are usually less insert operations than get operations, therefore using indexes with a small cost on the insertion time is completely worth the increase of reading speed.
+In conclusion, low average times to perform query data, no data loss \footnote{0\% failure rate in every test } and an appreciable scalability even using  “weak” hardware specifications, MongoDB confirms to be a choice that perfectly fits the needs of our commission.
 \section{Comparing results with other benchmarks}
 \label{sec:5}
 In the spreadsheet summary, there are also some results of tests performed by other two companies with better hardware components to support bigger workloads. Those benchmarks have been used in the beginning of the project as inspiration and also as first overview on Mongo and its performance with a proper hardware.

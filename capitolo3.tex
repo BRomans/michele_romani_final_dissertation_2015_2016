@@ -24,13 +24,12 @@ The final aim of the project so is not a benchmark between different DMBS, but a
 It became clear that the beginning idea of a complete benchmark over the most used DBMS was impossible in term of time and money costs.
 I decided to develop a modular application following the patterns of microservices. Due to this choice, the final result allows to reuse a good part of the software  adding a new module for each eventual DMBS, using the existing code from the MongoDB module and adapting it to another database technology with the proper drivers provided by Java Spring.
 In the end thanks to the satisfactory results obtained by MongoDB, there was no need to include other technologies in the benchmark.
-\newpage
 The architecture, drawed with \textit{Draw.io} \footnote{https://www.draw.io}, presents  both the implemented modules and the possible or discarded modules (dot-line) to give an overview of how a microservices production application should look
 Due to time issues, we decide to not implemented all unnecessary modules like for example the \textit{Authentication Module}.
 \begin{figure}
 \includegraphics[scale=0.5]{app-architecture.png}
 \centering
-\caption{Rappresentation of the architecture including possible future implementations}
+\caption{Representation of the architecture including possible future implementations}
 \end{figure}
 
 
@@ -72,7 +71,6 @@ The \textit{Status Page} is  a page that launches a REST \footnote{https://en.wi
 \centering
 \caption{The Status page.}
 \end{figure}
-\newpage
 The\textit{MongoDB Page} is the most important of this module and  it is the page where the user can setup the configuration for a new test.
 It is possible to choose:
 \begin{itemize}
