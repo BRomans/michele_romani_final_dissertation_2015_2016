@@ -6,7 +6,7 @@ Proceeding through the chapter, we deeply explain each metric analyzed and compa
 \section{Environment of testing}
 \label{sec:1}
 Since multithreading inside the Java Virtual Machine is quite expensive in terms of CPU and memory usage, it was not possible to launch more than 8 threads from a single machine. 
-The enviroinment of testing is a small LAN of virtual and physical machines connected and controlled in SSH \footnote{ssh} using Putty from a laptop.
+The enviroinment of testing is a small LAN of virtual and physical machines connected and controlled in SSH \footnote{http://www.cisco.com/c/en/us/about/press/internet-protocol-journal/back-issues/table-contents-46/124-ssh.html} using Putty from a laptop.
 The following virtual machines are part of the evironment: 
 \begin{itemize}
 	\item \textit{vm-mondb} running a Mongo node as Master with the following hardware specifications - CPU: Intel i7 Quadcore @2400Mhz, RAM: 4Gb, HDD: 30Gb.
@@ -138,7 +138,7 @@ The plan was to perform tests of increasing complexity and data workload to anal
 In this phase all data spread across 4 different instances of MongoDB Resource Module have been gathered using the UI Module on a laptop connected to the LAN.
 In the meanwhile on another laptop the UI Module plotted all the data of its MongoDB Resource Module instance. It was not possible to plot the results from the virtual machines because their data did not pass through the Angular module dedicated to this function. This is unfortunately a limitation of the actual implementation of the software.
 All the metrics tables and the graphs plotted by the UI module were printed on .jpeg files and then inserted into an Excel Spreadsheet where there is a page for each test. All the averages from all the machines for each test have been calculated using Excel inside the relative page and then linked to the summary page to compare all the tests. Any plotted graph has been linked into those pages but not into the summary page to allow a clean presentation to any reader.
-This Excel Spreadsheet is freely available \footnote{link del file} for consultation. 
+This Excel Spreadsheet \footnote{https://drive.google.com/open?id=0B1IlD5PLfM8\_LTY5QjVXR0R3SE0} is freely available for consultation. 
 It is possible to read all the data retrieved from the tests, but as they are quite a lot and eventually confusing, only the most interesting and meaningful are analyzed in the followin sections. For more details, all readers are free to consult that file.
 
 \section{Analyzing results}
@@ -171,37 +171,51 @@ Tests from 1 to 3 are not real load test, they did not “stress” Mongo at all
 Each test  took some hours to run, some of them have scheduled for automatic launch during the night to save time.
 For unknown reasons \textit{Test7} and  \textit{Test9} were incomplete due to an interruption of alimentation of the laptop used to plot data \footnote{The laptop itself was running threads that unfortunately stopped performing operations on Mongo}.
 As last, we can ignore \textit{Test8} as the complexity of the query used to stress Mongo was too low with to affect the database performance, resulting in a test similar to \textit{Test4}.
-Anyway, all machines that completely performed their workload have been kept in the analysis because there was no time to repeat the tests before the presentation scheduled date and they still confirmed Mongo efficient performance \footnote{At least partially their data were comparable}.
+Anyway, all machines that completely performed their workload have been kept in the analysis because there was no time to repeat the tests before the presentation scheduled date and they still confirmed Mongo efficient performance \footnote{Data were partially comparable}.
 
 \subsection{Results}
 In this table are gathered the most relevant results from the analysis spreadsheet, cleaned from all not necessary columns and details.
-\begin{figure}[H]
-\includegraphics[scale=0.4]{table.png}
-\centering
-\caption{Summary of the analyzed metrics.}
-\end{figure}
-% Please add the following required packages to your document preamble:
-% \usepackage{booktabs}
-% \usepackage[table,xcdraw]{xcolor}
-% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
-%\begin{table}[]
+%\begin{figure}[H]
+%\includegraphics[scale=0.3]{table.png}
 %\centering
-%\begin{tabular}{cccccccccccc}
-%\hline
-%\rowcolor[HTML]{BBDAFF} 
-%\textbf{Test} & \textbf{Threads} & \textbf{Nodes} & \textbf{Entries} & \textbf{Duration(s)} & \textbf{Avg Put Time(ms)} & \textbf{Avg Get Time(ms)} & \textbf{Max Put Time(ms)} & \textbf{Min Put Time(ms)} & \textbf{Max Get Time(ms)} & \textbf{Min Get Time(ms)} & \textbf{Throughput (op/s)} \\ \hline
-%\rowcolor[HTML]{FFCE93} 
-%1 & 1 & 1 & 200.000 & 5.298 & 14 & 18 & 10.902 & 14 & 10.907 & 18 & 75,50019 \\
-%\rowcolor[HTML]{FFCE93} 
-%4 & 35 & 1 & 2.000.000 & 9.074 & 29,8 & 34,4 & 5.004 & 18 & 5.113 & 21 & 190,87396 \\
-%\rowcolor[HTML]{FFCE93} 
-%6 & 35 & 2 & 2.000.000 & 8.440 & 28,85 & 31,53 & 1.651 & 14 & 1.691 & 16 & 195,43104 \\
-%\rowcolor[HTML]{FFCE93} 
-%10 & 35 & 2 & 2.000.000 & 8.047 & 28,8 & 31,4 & 1.422 & 18 & 1.531 & 21 & 195,28309 \\ \hline
-%\end{tabular}
-%\caption{My caption}
-%\label{my-label}
-%\end{table}
+%\caption{Summary of the analyzed metrics.}
+%\end{figure}
+\begin{table}[H]
+\centering
+\label{my-label}
+\begin{tabular}{@{}ccccccc@{}}
+\toprule
+\rowcolor[HTML]{BBDAFF} 
+Test & Threads & Nodes & Entries & Duration(s) & Avg Put Time(ms) & Avg Get Time(ms) \\ \midrule
+\rowcolor[HTML]{FFCC67} 
+1 & 1 & 1 & 200.000 & 5.298 & 14 & 18 \\
+\rowcolor[HTML]{FFCC67} 
+4 & 35 & 1 & 2.000.000 & 9.074 & 29,8 & 34,4 \\
+\rowcolor[HTML]{FFCC67} 
+6 & 35 & 2 & 2.000.000 & 8.440 & 28,85 & 31,53 \\
+\rowcolor[HTML]{FFCC67} 
+10 & 35 & 2 & 2.000.000 & 8.047 & 28,8 & 31,4 \\ \bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}cccccc@{}}
+\toprule
+\rowcolor[HTML]{BBDAFF} 
+Test & \begin{tabular}[c]{@{}c@{}}Max\\  Put Time(ms)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Min\\ Put Time(ms)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Max \\ Get Time(ms)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Min \\ Get Time(ms)\end{tabular} & Throughput(op/s) \\ \midrule
+\rowcolor[HTML]{FFCC67} 
+1 & 10.902 & 14 & 10.907 & 18 & 75,50019 \\
+\rowcolor[HTML]{FFCC67} 
+4 & 5.004 & 18 & 5.113 & 21 & 190,87396 \\
+\rowcolor[HTML]{FFCC67} 
+6 & 1.651 & 14 & 1.691 & 16 & 195,43104 \\
+\rowcolor[HTML]{FFCC67} 
+10 & 1.422 & 18 & 1.531 & 21 & 195,28309 \\ \bottomrule
+\end{tabular}
+\caption{Summary of the analyzed metrics.}
+\label{my-label}
+\end{table}
 
 All of those tests run with a 50 – 50 workload type, meaning that half of the operation were \textit{put} operations and the other half \textit{get} operations, for example having 200.000 entries means that 400.000 operations are performed during the test.
 There are three different typologies of test \footnote{See section 4.2} so we analyze at least one test for each typology: Test 1 belongs to the First Type and so it was just a functional test with a small workloadload performed on a Mongo database with 1 node. It obtained a \textit{Max Put Time} and a \textit{Max Get Time} of more than 10 seconds, but some considerations should be taken in account:
@@ -216,7 +230,7 @@ During this test along with other operations, a "Complex Query" have been automa
 With the progressive increase of \textit{n} as total number of documents in the database, the query takes increasing average time to execute. 
 The following chart represents all execution times of the query over the total executions.
 \begin{figure}[H]
-\includegraphics[scale=0.6]{exec_times_new.png}
+\includegraphics[scale=0.5]{exec_times_new.png}
 \centering
 \caption{Query execution times.}
 \end{figure}
