@@ -1,7 +1,7 @@
 \chapter{Introduction}
 \label{cha:intro}
 
-In the first two parts of this chapter a brief overview will explain the most known databases technologies while in the last part NoSQL databases will be introduced through the descrption of the most famous implementations from which many others derive.
+In the first two parts of this chapter a brief overview will explain the most known databases technologies while in the last part NoSQL databases will be introduced through the description of the most famous implementations from which many others derive.
 
 
 \section{Discovery of NoSQL technologies}
@@ -10,7 +10,7 @@ In the first two parts of this chapter a brief overview will explain the most kn
 Commonly students have their first encounters with database technologies during their studies in high school or bachelor degree and, to better understand all the fundamentals concepts, they are taught the basic principles of relational databases.
 It i’s the most common choice of every school teaching the very foundation of Databases to make students understand the the meaning of \textit{CRUD operations, relations, consistency, redundancy} \footnote{https://en.wikipedia.org/wiki/Create,\_read,\_update\_and\_delete}, etc... and how to correctly set up the entities of their systems following proven patterns and constraints.
 Detaching from well-known developing habits is not always so simple, but it is necessary to understand why big companies such as Facebook decided to invest money in developing their own database solution, Cassandra, instead of using an existing relational database.
-It is important to know that there are many different ways to build a database, some are better than others in certain use cases. Nowadays, an huge amount of data are spread around the world everyday through the Web and it needs to be stored and retriewed quickly to save companies' money and give the users a perfect feeling of responsivity\cite{}.
+It is important to know that there are many different ways to build a database, some are better than others in certain use cases. Nowadays, an huge amount of data are spread around the world everyday through the Web and it needs to be stored and retrieved quickly to save companies' money and give the users a perfect feeling of responsivity\cite{}.
 But let’s start from the beginning to get an overview of a technology we rely on every day, even without being aware of its presence in every single application we use.
 
 
@@ -29,25 +29,26 @@ Tables can have relations each other with the use of foreign keys, and each tabl
 It’s fundamental for a good design of a relational database that its schema is in \textit{Normal Form}, following three main steps:
 \begin{itemize}
 	\item \textit{First Normal Form} : Eliminating groups of repeated data and creating a table for each group of related data identified with a primary key.
-	\item \textit{Second Normal Form} : Moving all identical set of values for multiple records to a new table and using a foreing key to link them.
-	\item \textit{Third Normal Form} : Removing all fields not dependent on the primary key or, if they are necesary, putting them into another table.
+	\item \textit{Second Normal Form} : Moving all identical set of values for multiple records to a new table and using a foreign key to link them.
+	\item \textit{Third Normal Form} : Removing all fields not dependent on the primary key or, if they are necessary, putting them into another table.
 \end{itemize}
 Apart from Normal Form, to ensure that a relational database guarantees the reliability of its transactions it must ensure ACID\footnote{http://www.service-architecture.com/articles/database/acid\_properties.html} properties:
 \begin{itemize}
 	\item \textit{Atomicity} : A transaction must be completed in all of its parts or none.
 	\item \textit{Consistency} : Transactions preserve the integrity of the database and they do not leave the database in an invalid state after occurring.
 	\item \textit{Isolation} : Transactions must be isolated to guarantee that any inconsistency does not affect data of other transactions.
-	\item \textit{Duraibility} : Completed transactions make changes that must be durable.
+	\item \textit{Durability} : Completed transactions make changes that must be durable.
 \end{itemize}
 The most famous relational databases follow SQL syntax that stands for Structured Query Language and is a standard since 1986.
 Among this category, the most famous and used are MySQL, PostgreSQL, Microsoft SQL Service, Oracle Database.
 \subsection{Navigational Databases}
 The first generation of databases used pointers from one record to another to “navigate” the database and that’s why they were called Navigational databases.
-The fundamental problem of this kind of database was that the user needed to know the physical structure of the database to query data from it. The only way to add an extra field was achieved only by rebuilding the storage scheme.
-In addition, the absence of a standardisation among vendors made those databases disappear quickly in favour of more functional choices
+The fundamental problem of this kind of database was that the user needed to know the physical structure of the database to query data from it. 
+To add an extra field there was only one way: rebuilding the storage schema.
+In addition, the absence of a standardisation among vendors made those databases disappear quickly in favor of more functional choices
 
 \subsection{Object-oriented Databases}
-In the long story of the database evolution, object-oriented databases helped developing the communication between databases and programming languages, but they failed due to their bounds to a specific programming language. They offered advanced features like inheritance and polymorphism and could support a large number of data types.
+In the long story of the database evolution, object-oriented databases helped develop the communication between databases and programming languages, but they failed due to their bounds to a specific programming language. They offered advanced features like inheritance and polymorphism and could support numerous data types.
 What is left of their inheritance in the aftermath is the implementation of drivers and bindings between databases and programming language.
 NoSQL technologies are a perfect example of the evolution of the idea of object-oriented databases.
 
@@ -57,7 +58,7 @@ They  aim to great performance and scalability, to support the increasing need o
 Since the category is itself generic, and new different implementations are release every year, they can be broadly divided in those sub-categories:
 \begin{itemize}
 	\item \textit{Graph databases} : as foundation of this kind of databases there is the graph theory and the concept of nodes and edges. Each node corresponds to an entity and edges correspond to relations between them. They use an index-free adjacency that grants each element a pointer to its adjacent element and does not require the full indexing of the database.
-	\item \textit{Key-value stores} : thanks to simple concepte of a key assigned to each value, similarly to has-tables, the model of those databases usually grants higher performance. It is even possible, depending on the database implementation, that a key could be bound to an entire collection of values.
+	\item \textit{Key-value stores} : thanks to simple concept of a key assigned to each value, similarly to hashtables, the model of those databases usually grants higher performance. It is even possible, depending on the database implementation, that a key could be bound to an entire collection of values.
 	\item \textit{Document stores} : this is the family which MongoDB belongs and they work around the concept “Document”. Documents are records and they are stored into tables called collections. Usually collections don’t require the same number of fields, so there could be different versions of the same document inside a collection. A great advantage of this model is the ease of data access and manipulation.
 \end{itemize}
 The core aspect of their implementation is that they have no predefined schema, in addition most of them does not require their records to have the same number of fields if not enforced,  this feature is called Dynamic Schema \footnote{http://blog.rdx.com/is-nosql-the-natural-progression-of-database-technology-0}.
@@ -69,19 +70,19 @@ It is then important to provide a good configuration of the architecture in orde
 
 
 \subsection{The CAP Theorem}
-This theorem, also named Brewer's theorem after the first computer scientist that stated it, states that a distributed computer system cannot simoultaneously provide more than two of the following guarantess: \textit{Consistency\footnote {Every read receives the most recent write or an error}, Availability \footnote{Every requests receives a response, but with no guarantes that it contain the most recent write}, Partition tolerance \footnote{The systems keeps operating despite the delay (or drop) of an arbitrary number of messages }}.
-RDBMS for examples, designed with traditional ACID guarantees, choose Consistency and Availability and this is why they have a weak Partition tolerance.
+This theorem, also named Brewer's theorem after the first computer scientist that stated it, states that a distributed computer system cannot simultaneously provide more than two of the following guarantees: \textit{Consistency\footnote {Every read receives the most recent write or an error}, Availability \footnote{Every requests receives a response, but with no guarantees that it contain the most recent write}, Partition Tolerance \footnote{The systems keeps operating despite the delay (or drop) of an arbitrary number of messages }}.
+RDBMS for examples, designed with traditional ACID guarantees, choose Consistency and Availability and this is why they have a weak Partition Tolerance.
 NoSQL databases on the other side are divided in those who prefer Consistency and Partition Tolerance and those who choose Partition Tolerance and Availability.
 \begin{figure}[H]
 \includegraphics[scale=0.5]{cap-theorem.png}
 \centering
-\caption{Some famous databases partitoned following the CAP theorem.}
+\caption{Some famous databases partitioned following the CAP theorem.}
 \end{figure}
 
 
 
 \section {NoSQL: a brief panoramic over the actual situation}
-NoSQL databases area literally spreading around, with many companies and insitutes implementing their own custom version so it would be impossible to describe them all. 
+NoSQL databases area literally spreading around, with many companies and institutes implementing their own custom version so it would be impossible to describe them all. 
 Most of them are new implementations of the pioneers who brought this innovating technology to the market less than 10 years ago, that are briefly described in the following part.
 
 \subsection{MongoDB}
@@ -98,7 +99,7 @@ Google announced a new version called \textsc{Google Cloud Bigtable }\footnote{h
 
 \subsection{Apache Cassandra}
 Another open-source project is \textsc{Apache Cassandra} \footnote{http://cassandra.apache.org}, developed at Facebook in 2007 to improve the research of the internal mail system and then entered in the Incubator project from Apache in 2008 where it begun its growth as DBMS.
-Like Big Tables it offers a key-value storage structure with eventual consistency. Each keys correspond to a value and all the values are grouped in families of columns. Families are defined when the database is created and Cassandra adopts an hybrid approach between DBMS oriented to columns and memorization oriented to rows.
+Like Big Tables it offers a key-value storage structure with eventual consistency. Each keys correspond to a value and all the values are grouped in families of columns. Families are defined when the database is created and Cassandra adopts a hybrid approach between DBMS oriented to columns and memorization oriented to rows.
 Other famous sites than Facebook that uses Cassandra are Twitter and Digg, and many benchmark tests, in terms of performance and scalability confirms Cassandra as the best NoSQL database in the current scenario.
 
 \subsection{Amazon DynamoDB}

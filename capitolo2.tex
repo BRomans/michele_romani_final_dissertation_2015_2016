@@ -1,18 +1,18 @@
 \chapter{The Choice}
 \label{cha:2}
-In this chapter we explain the motivations that determined  MongoDB as choice for the evaluation and consequently the commission among other NoSQL possibilites.
+In this chapter we explain the motivations that determined  MongoDB as choice for the evaluation and consequently the commission among other NoSQL possibilities.
 Following there is a deep description of many Mongo core features mostly taken from the official documentation, that could be a good introduction for interested users.
 
 \section{MongoDB}
 \label{sec:1}
 In evaluating which NoSQL technology could be the best for our company we aimed for a combination between the best performance,  ease of use and understandability of the product as we had no real expert in this field.
 This is probably the main reason that made us put Cassandra as secondary makeshift in the evaluation.
-Thanks to his functionalities Mongo was the first choice for evaluation: its JSON-like format for data called BSON \footnote{See section 2.2.1} and the simple configuration of its nodes made him the perfect candidate.
+Thanks to his features Mongo was the first choice for evaluation: its JSON-like format for data called BSON \footnote{See section 2.2.1} and the simple configuration of its nodes made him the perfect candidate.
 Many built-in functions of Mongo automatize the setup of a server and the creation of collections, for example if you try to \textit{insert} a document inside an undefined collection \textit{foo}, Mongo will automatically create this new collection called \textit{foo}.
 If you connect to a new database in a Mongo instance and start inserting data, it will automatically create the schema, the collections and give a unique\textit{\_id} to each one of them  with no need of manual interaction from the developer.
-MongoDB derives its name from \textit{“humungous”} which means enormous and it fits the idea of application that it was designed to support.
+MongoDB derives its name from \textit{“humongous”} which means enormous and it fits the idea of application that it was designed to support.
 Its data records (or rows) are called \textit{documents} and are stored in tables called \textit{collections}. So when you insert something into a Mongo database you are adding document X to collection Y.
-A collection does not require the same schema for all its documents, some of them can have more or less fields than others, but in case of need it is possible to enforce document validation rules in order to accept only documents with the desired schema.
+A collection does not require the same schema for all its documents, some of them can have more or fewer fields than others, but in case of need it is possible to enforce document validation rules in order to accept only documents with the desired schema.
 
 \section{Key features of Mongo}
 \label{sec:2}
@@ -93,18 +93,18 @@ This is basically how Mongo performs CRUD operations on data. For more examples 
 
 \subsection {Availability and scalability}
 In Mongo, it is possible to obtain high availability thanks to \textit{Replica Set} \footnote{See section 2.6}, a replication facility that provides \textit{automatic failover} and \textit{data redundancy}. In substance, it is a set of Mongo servers (or nodes) that store the same data set, increasing data availability.
-For horizontal scalability instead, Mongo’s core functionality is \textit{Sharding} \footnote{See section 2.7}, a facility that distributes data across a cluster of machine using a \textit{Shard Key} to balance data. In latest versions, it is even possible to create zones of data that use the \textit{Shard Key} to direct Mongo operations, covered by a particular zone, only to the shards inside that zone.
+For horizontal scalability instead, Mongo’s core functionality is \textit{Sharding} \footnote{See section 2.7}, a facility that distributes data across a cluster of machine using a \textit{Shard Key} to balance data. In the latest versions, it is even possible to create zones of data that use the \textit{Shard Key} to direct Mongo operations, covered by a particular zone, only to the shards inside that zone.
 
 \section{Indexes}
 \label{sec:3}
-Indexes are a special data structure used to store a specific field or set, ordered by its value and they are fundamental for Mongo to perform at its best. This allow to support efficient equality matches and range-based query operations and they can be easily used to sort results with low computational cost.
+Indexes are a special data structure used to store a specific field or set, ordered by its value and they are fundamental for Mongo to perform at its best. This allow supporting efficient equality matches and range-based query operations and they can be easily used to sort results with low computational cost.
 Every collection has an unique default index \textit{\_id}, created during the creation of the collection and, if not specified in other ways, calculated on the timestamp of the operative system. It is the primary key of the collection and it prevents clients from inserting duplicates, consequently it cannot be dropped. 
 In sharded clusters \textit{\_id} is usually used as default \textit{Shard Key} \footnote{See section 2.7.2}, if another field is specified then it must be enforced to be unique.
 Indexes typologies are:
 \begin{itemize}
 	\item \textit{Single Field Index} : classic index on a single field, it can be traversed in both directions for sorting.
 	\item \textit{Compound Index} : index on multiple fields, during creation the sorting order must be specified for each field, having 1 for ascending order and  -1 for descending, then they are sequentially applied.
-	\item \textit{Multikey Index} : when a compound index holds an array value then it becomes a multikey index having a different key on each element of the array for many combination with other fields within the index. It is not possible to have more than an array field in an index of this type.
+	\item \textit{Multikey Index} : when a compound index holds an array value then it becomes a multikey index having a different key on each element of the array for many combinations with other fields within the index. It is not possible to have more than an array field in an index of this type.
 	\item \textit{Geospatial Index} : index that is used for geospatial coordinate data, they can be 2d indexes for planar geography or 2dsphere for spherical geometry.
 	\item \textit{Text Index} : an index that supports searching for string content, but it can only store ‘root’ words, for example it cannot store prepositions like “the”, “a”, “or” etc.
 	\item \textit{Hashed Index} : this index is used to support has based sharding so it indexes the hash of the value of a field. It can be used only for equality matches and cannot support range-based queries.
@@ -115,13 +115,13 @@ Since Mongo automatically computes the hashes when resolving queries, user appli
 
 \section{Storage Engines}
 \label{sec:4}
-A storage engine is the component of a database managment system responsible of data storaging on disk or in memory. Mongo supports 3 storage engines with different performance depending on specific workloads:
+A storage engine is the component of a database management system responsible of data storaging on disk or in memory. Mongo supports 3 storage engines with different performance depending on specific workloads:
 \begin{itemize}
 	\item \textit{Wired Tiger} - It is now the default storage engine and provides a document-level concurrency model, also called \textit{checkpointing} and a data compression function that minimizes storage use at the cost of additional CPU.
 \textit{Checkpoints} are snapshot of the data saved automatically by Mongo every 60 seconds or after 2 gigabytes of journal data. Thanks to \textit{Wired Tiger}, Mongo can recover data from last checkpoint event without \textit{journaling} data, but wil lose of course any data written after last checkpoint.
 \textit{Journal} is a write-ahead transaction log that persists all data modifications between checkpoints and in \textit{Wired Tiger} is active by default, allowing complete data recovery togheter with \textit{checkpoints}.
-By default Wired Tiger internal cache uses 50\% of available RAM - 1 GB or 256 MB.
-	\item \textit{MMAPv1} - It is  the original storage engine of Mongo and it is still a good choice for worloads with high volume of operations (inserts, reads, updates). It is based on memory mapped files and, like \textit{Wired Tiger}, it uses \textit{Journal} to ensure that every modification  to Mongo data sets are durably written on disk.
+By default, Wired Tiger internal cache uses 50\% of available RAM - 1 GB or 256 MB.
+	\item \textit{MMAPv1} - It is  the original storage engine of Mongo and it is still a good choice for worlkoads with high volume of operations (inserts, reads, updates). It is based on memory mapped files and, like \textit{Wired Tiger}, it uses \textit{Journal} to ensure that every modification  to Mongo data sets are durably written on disk.
 With\textit{MMAPv1} Mongo uses the power of 2 sizes allocation so each file has a size that is a power of 2 (32, 64, 128...). The advantages of this strategy are in reducing fragmentation thanks to efficient reuse of freed records and reducing moves thanks to the added padding space given to documents allowing them to grow without requiring a move.
 	\item \textit{In-Memory Storage Engine} - It is an enterprise evolution that retains data in-memory for more predictable data latencies that uses document-level concurrency control for write operations. Multiple clients can modify different documents of a collection at the same time as results of this implementation
 \end{itemize}
@@ -130,9 +130,9 @@ With\textit{MMAPv1} Mongo uses the power of 2 sizes allocation so each file has 
 \label{sec:5}
 
 \subsection{Replica Set and Server Selection Algorithm}
-\textit{Replica Set} is a group of \textit{mongod} \footnote{https://docs.mongodb.com/manual/reference/program/mongod}instances that mantain a replicated data set. The purpose is to provide redundancy an high availability of data as base for a production deployment. Copies of data are spread on different database servers and is completely fault tolerant against the loss of one or more nodes depending on the total number of replicated servers \footnote{At least one server needs to be active.}.
+\textit{Replica Set} is a group of \textit{mongod} \footnote{https://docs.mongodb.com/manual/reference/program/mongod}instances that maintain a replicated data set. The purpose is to provide redundancy an high availability of data as base for a production deployment. Copies of data are spread on different database servers and is completely fault tolerant against the loss of one or more nodes depending on the total number of replicated servers \footnote{At least one server needs to be active.}.
 Clients can send read operations to multiple servers allowing increased read capacity. Mongo provides two operators \textit{w} that represents the setting to confirm a write operation and \textit{j} that represents the write operation on \textit{Journal} \footnote{https://docs.mongodb.com/manual/core/journaling}.
-In Mongo by default w:true and j:false, but in a Replica Set  usually journaling should be active and there can be a primary node with w:majority that means that the write concern is sent to all the memebers of the set.
+In Mongo by default w:true and j:false, but in a Replica Set  usually journaling should be active and there can be a primary node with w:majority that means that the write concern is sent to all the members of the set.
 If a primary node fails the \textit{Selection Algorithm} starts the election of  a new primary between the other members, using an \textit{Arbiter} \footnote{A node with no data set and no dedicated hardware} in case they are even, and when the old primary recovers it will become a secondary.
 
 \subsection{Automatic failover and data redundancy}
