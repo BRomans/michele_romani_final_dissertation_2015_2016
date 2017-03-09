@@ -1,7 +1,7 @@
 \chapter{The Choice}
 \label{cha:2}
-In this chapter we explain the motivations that determined  MongoDB as choice for the evaluation and consequently the commission among other NoSQL possibilities.
-Following there is a deep description of many Mongo core features mostly taken from the official documentation, that could be a good introduction for interested users.
+In this chapter we explain the motivations that determined  MongoDB as choice for the evaluation, and consequently the commission, among other NoSQL possibilities.
+Following, there is a deep description of many Mongo core features mostly taken from the official documentation that could be a good introduction for interested users.
 
 \section{MongoDB}
 \label{sec:1}
@@ -130,7 +130,7 @@ With\textit{MMAPv1} Mongo uses the power of 2 sizes allocation so each file has 
 \label{sec:5}
 
 \subsection{Replica Set and Server Selection Algorithm}
-\textit{Replica Set} is a group of \textit{mongod} \footnote{https://docs.mongodb.com/manual/reference/program/mongod}instances that maintain a replicated data set. The purpose is to provide redundancy an high availability of data as base for a production deployment. Copies of data are spread on different database servers and is completely fault tolerant against the loss of one or more nodes depending on the total number of replicated servers \footnote{At least one server needs to be active.}.
+\textit{Replica Set} is a group of \textit{mongod} \footnote{https://docs.mongodb.com/manual/reference/program/mongod}instances that maintain a replicated data set. The purpose is to provide redundancy an high availability of data as base for a production deployment. Copies of data are spread on different database servers and it is completely fault tolerant against the loss of one or more nodes depending on the total number of replicated servers \footnote{At least one server needs to be active.}.
 Clients can send read operations to multiple servers allowing increased read capacity. Mongo provides two operators \textit{w} that represents the setting to confirm a write operation and \textit{j} that represents the write operation on \textit{Journal} \footnote{https://docs.mongodb.com/manual/core/journaling}.
 In Mongo by default w:true and j:false, but in a Replica Set  usually journaling should be active and there can be a primary node with w:majority that means that the write concern is sent to all the members of the set.
 If a primary node fails the \textit{Selection Algorithm} starts the election of  a new primary between the other members, using an \textit{Arbiter} \footnote{A node with no data set and no dedicated hardware} in case they are even, and when the old primary recovers it will become a secondary.

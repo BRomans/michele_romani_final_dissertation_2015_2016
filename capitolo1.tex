@@ -17,7 +17,7 @@ But let’s start from the beginning to get an overview of a technology we rely 
 \section{Databases}
 \label{sec:problem}
 
-A Database is an organized collection of data even though we often use the term to refer to the entire database system. The Database Management System, or DBMS, is the name of the entire system that handles data, transactions, relations and eventually problems.
+A Database is an organized collection of data, but  we often use the term to refer to the entire database system. The Database Management System, or DBMS, is the name of the entire system that handles data, transactions, relations and eventually problems.
 The term DBMS has been replaced by RDBMS in the common language, that stands for Relational Database Management Systems, since for decades the relational model has been a standard for data storage.
 
 
@@ -53,17 +53,17 @@ What is left of their inheritance in the aftermath is the implementation of driv
 NoSQL technologies are a perfect example of the evolution of the idea of object-oriented databases.
 
 \subsection{NoSQL Databases}
-The last generation of databases is called NoSQL because of its detachment from the classic relational model in terms of schema and their use of query languages different  than SQL.
-They  aim to great performance and scalability, to support the increasing need of those applications that daily transfers huge amounts of data.
-Since the category is itself generic, and new different implementations are release every year, they can be broadly divided in those sub-categories:
+The last generation of databases is called NoSQL because of its detachment from the classic relational model in terms of schema and the use of query languages different  than SQL.
+These databases aim to obtain great performance and scalability, to support the increasing needs of those applications that daily transfers huge amounts of data.
+Since the category is itself generic, and new different implementations are released every year, they can be broadly divided in those sub-categories:
 \begin{itemize}
-	\item \textit{Graph databases} : as foundation of this kind of databases there is the graph theory and the concept of nodes and edges. Each node corresponds to an entity and edges correspond to relations between them. They use an index-free adjacency that grants each element a pointer to its adjacent element and does not require the full indexing of the database.
+	\item \textit{Graph databases} : as foundation of this kind of databases there is the \textit{Graph Theory} and the concept of nodes and edges. Each node corresponds to an entity and edges correspond to relations between them. They use an index-free adjacency that grants each element a pointer to its adjacent element and does not require the full indexing of the database.
 	\item \textit{Key-value stores} : thanks to simple concept of a key assigned to each value, similarly to hashtables, the model of those databases usually grants higher performance. It is even possible, depending on the database implementation, that a key could be bound to an entire collection of values.
 	\item \textit{Document stores} : this is the family which MongoDB belongs and they work around the concept of  “Document”. Documents are records and they are stored into tables called collections. Usually collections don’t require the same number of fields, so there could be different versions of the same document inside a collection. A great advantage of this model is the ease of data access and manipulation.
 \end{itemize}
-The core aspect of their implementation is that they have no predefined schema, in addition most of them does not require their records to have the same number of fields if not enforced,  this feature is called Dynamic Schema \footnote{http://blog.rdx.com/is-nosql-the-natural-progression-of-database-technology-0}.
-They support to replication of the primary server on many other servers, like MongoDB’s ReplicaSet, and this provides reliability in case of failover of one of the nodes granting no data loss in production applications. Servers execute same transactions and keep their data synchronized to eliminate any errors, and they usually write a backup copy or a snapshot of the data after any operation. As is it possible to imagine, this multi-node architecture cannot fully guarantee the respect of ACID properties and might sometimes present synchronization issues with the possible result of a secondary node becoming primary with partially outdated data.
-The absence of constraints on the schema allows query to be executed faster without the need of expensive \textit{join} operations on the collections, but when it comes to execute complex queries NoSQL databases performance fall if they are not well configured.
+The core aspect of their implementation is that they have no predefined schema, in addition most of them does not require their records to have the same number of fields if not enforced,  the union of those features is called Dynamic Schema \footnote{http://blog.rdx.com/is-nosql-the-natural-progression-of-database-technology-0}.
+They support replication of the primary server on many other servers, like MongoDB’s ReplicaSet, to provide reliability in case of failover of one of the nodes and granting no data loss in production applications. Servers execute same transactions and keep their data synchronized to eliminate any errors, and they usually write a backup copy or an in-memory snapshot of the data after any operation. As is it possible to imagine, this multi-node architecture cannot fully guarantee the respect of ACID properties and might sometimes present synchronization issues with the possible result of a secondary node becoming primary with partially outdated data.
+The absence of constraints on the schema allows query to be executed faster without the need of expensive \textit{Join} operations on the collections, but when it comes to execute complex queries NoSQL databases performance fall if they are not well configured.
 It is then important to provide a good configuration of the architecture in order make the most of the strengths of those databases.
 
 
@@ -71,8 +71,8 @@ It is then important to provide a good configuration of the architecture in orde
 
 \subsection{The CAP Theorem}
 This theorem, also named Brewer's theorem after the first computer scientist that stated it, states that a distributed computer system cannot simultaneously provide more than two of the following guarantees: \textit{Consistency\footnote {Every read receives the most recent write or an error}, Availability \footnote{Every requests receives a response, but with no guarantees that it contain the most recent write}, Partition Tolerance \footnote{The systems keeps operating despite the delay (or drop) of an arbitrary number of messages }}.
-RDBMS for examples, designed with traditional ACID guarantees, choose Consistency and Availability and this is why they have a weak Partition Tolerance.
-NoSQL databases on the other side are divided in those who prefer Consistency and Partition Tolerance and those who choose Partition Tolerance and Availability.
+RDBMS for examples, designed with traditional ACID guarantees, choose Consistency and Availability and this is why a distributed RDBMS hardly recover from a failover of one of its nodes.
+NoSQL databases on the other side are divided in those who prefer Consistency and Partition Tolerance and those who choose Partition Tolerance and Availability depending on their implementation. The particularity is that some NoSQL database could supply missing Consistency or Availability with flexible recovering tools, depending on its implementation. An example is the \textit{ Server Selection Algorithm} \footnote{See section 2.5.1} that MongoDB uses to elect a new Primary node after failover and to retrieve a backup of most recent writes on that node after it recovers.
 \begin{figure}[H]
 \includegraphics[scale=0.5]{cap-theorem.png}
 \centering
