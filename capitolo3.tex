@@ -11,8 +11,8 @@ Technologies taken in account where MongoDB, Apache Cassandra and PostgreSQL wit
 PostgreSQL was discarded almost immediately due to lower performance confirmed by third part benchmarks, so MongoDB became the first choice thanks to its simplicity and Cassandra was left as second choice in case Mongo couldn’t satisfy the requirements, even if it seemed to have better results on most of the benchmarks found on the Web. 
 As mentioned, the customer gave us specific necessities:
 \begin{itemize}
-	\item The software counts many hundred thousands of active users with thousands of records each one, so the database should be able to support several millions of total records.
-	\item It works as a web application and needs to be responsive to give the user the best usage experience,consequently it should query results in no more than 2 seconds.
+	\item The software counts many hundred thousand active users with thousands of records each one, so the database should be able to support several millions of total records.
+	\item It works as a web application and needs to be responsive to give the user the best usage experience, consequently it should query results in no more than 2 seconds.
 	\item It contains important billing information, so data cannot be lost.
 	\item The web application is online 24/7 and it can be stopped only when releasing a new version. So even in the time slots with more expected traffic, any system crash must be prevented.
 \end{itemize}
@@ -22,9 +22,9 @@ The final aim of the project so is not a benchmark between different DMBS, but a
 \section{Implementation choices and architecture}
 \label{sec:2}
 It became clear that the beginning idea of a complete benchmark over the most used DBMS was impossible in term of time and money costs.
-I decided to develop a modular application following the patterns of microservices. Due to this choice, the final result allows to reuse a good part of the software  adding a new module for each eventual DMBS, using the existing code from the MongoDB module and adapting it to another database technology with the proper drivers provided by Java Spring.
+I decided to develop a modular application following the patterns of microservices. Due to this choice, the final result allows reusing a good part of the software  adding a new module for each eventual DMBS, using the existing code from the MongoDB module and adapting it to another database technology with the proper drivers provided by Java Spring.
 In the end thanks to the satisfactory results obtained by MongoDB, there was no need to include other technologies in the benchmark.
-The architecture, drawed with \textit{Draw.io} \footnote{https://www.draw.io}, presents  both the implemented modules and the possible or discarded modules (dot-line) to give an overview of how a microservices production application should look
+The architecture, drew with \textit{Draw.io} \footnote{https://www.draw.io}, presents  both the implemented modules and the possible or discarded modules (dot-line) to give an overview of how a microservices production application should look
 Due to time issues, we decide to not implemented all unnecessary modules like for example the \textit{Authentication Module}.
 \begin{figure}
 \includegraphics[scale=0.5]{app-architecture.png}
@@ -37,8 +37,8 @@ Due to time issues, we decide to not implemented all unnecessary modules like fo
 \section{Java Spring and AngularJS}
 \label{sec:3}
 \textsc{Spring} framework has become over the years one of the most popular Java frameworks for building  Enterprise applications, becoming an alternative (or replacement) for the more classical Enterprise Java Beans (EJB)  \footnote{https://en.wikipedia.org/wiki/Enterprise\_JavaBeans}. It introduced the concept of \textit{aspect-oriented} programming that is a programming paradigm that aims to increase modularity by allowing the separation of cross-cutting concerns. It’s composed by many modules, including Spring Security for authorization and authentication, Spring Web for customization of web applications using RESTful web services and Spring Data Access working with \textsc{JDBC} \footnote{http://www.oracle.com/technetwork/java/javase/jdbc/index.html} and object-relational mapping tools to support both relational and NoSQL databases. 
-It can create standalone “runnable” production-grade applications with Spring Boot, including an embedded Tomcat, and opinionated \textit{POMs} \footnote{https://maven.apache.org/guides/introduction/introduction-to-the-pom.html} to simplify Maven configuration and production-ready features.
-Those features, such as metrics, health check togheter with externalized configuration make it the definitive framework for Java Web applications among the java developer community and  it immediately became my unquestionable choice thanks to its affinity to micro-services model.
+Spring can create standalone “runnable” production-grade applications with Spring Boot, including an embedded Tomcat, and opinionated \textit{POMs} \footnote{https://maven.apache.org/guides/introduction/introduction-to-the-pom.html} to simplify Maven configuration and production-ready features.
+Those features, such as metrics, health check together with externalized configuration make it the definitive framework for Java Web applications among the java developer community and  it immediately became my unquestionable choice thanks to its affinity to micro-services model.
 On the front-end side, AngularJS was the perfect choice thanks to its natural affinity with Spring and Twitter Bootstrap and its routing management system for dynamic loading dynamic content inside single-page applications. I’ve chosen version 1.6 instead of the new version AngularJS 2, that has a different and more complex implementation and usage based on TypeScript, and I’ve made a wide use of it especially in the User Interface Module that manages the launch and data plotting  of the stress-test.
 
 \section{Microservices and modularity}
@@ -46,17 +46,17 @@ On the front-end side, AngularJS was the perfect choice thanks to its natural af
 The \textit{Micorservices Architecture} \footnote{http://microservices.io/patterns} is a modern type of architecture for servers-side enterprise applications. It is designed following specific patterns to support different clients including browsers (desktop or mobile) and native mobile applications. Part of the modules in a Microservices application might expose API to communicate via web services like REST calls, to exchange messages that return HTML/JSON/XML response.
 This approach allows major modularity in the developing process of a project involving a team or more where each member (or each team) works only on an assigned module.
 The application must be easy to understand in all of its single parts to sustain several deployments on different machines in order to satisfy scalability and availability requirements.
-Different frameworks can be used separately on selected modules and functionalities of the software should not be replicated within the modules.
+Different frameworks can be used separately on selected modules and functions of the software should not be replicated within the modules.
 This type of architecture has many advantages:
 \begin{itemize}
-	\item Each microservice is a small and independent software, easy to understand and to debug, that in case of fault will not afect other modules \footnote{But its missing functionality can possibly interrupt the application working process.}.
+	\item Each microservice is a small and independent software, easy to understand and to debug, that in case of fault will not affect other modules \footnote{But its missing functionality could interrupt the application working process.}.
 	\item Development is easy to scale, simply connecting a new independent module or machine. In this way each service can be developed and deployed independently.
-	\item Eliminates any commitment to a technology stack, in fact if a service needs major changes  it can be rewritten with a new technology stack without interferring with the system.
+	\item Eliminates any commitment to a technology stack, in fact if a service needs major changes  it can be rewritten with a new technology stack without interfering with the system.
 \end{itemize}
-Of course there are some disadvantages to deal if an application is developed following Microservices pattern, for example the additional complexity that a distributed system has rather than a monolitic system.
+Of course there are some disadvantages to deal if an application is developed following Microservices pattern, for example the additional complexity that a distributed system has rather than a monolithic system.
 A good organization is necessary to manage testing and deployment phases  to keep a low operational complexity in production because the functionality of each single module does not guarantee the functionality of the entire system.
-Another problem could be the network overhead generated by several distributed JVM that consume more memory and  network bandwidth than a single monolitic application.
-In conclusion, this architecture is highly suggested in those use cases where a distributed system  includes several functionalities and serves different typologies of clients \footnote{Different apps on different operative systems}, such as Netflix, Amazon and Ebay that switched from a monolitic architecture to microservices.
+Another problem could be the network overhead generated by several distributed JVM that consume more memory and  network bandwidth than a single monolithic application.
+In conclusion, this architecture is highly suggested in those use cases where a distributed system  includes several features (or services) and serves different typologies of clients \footnote{Different apps on different operative systems}, such as Netflix, Amazon and Ebay that switched from a monolithic architecture to microservices.
 \begin{figure}[H]
 \includegraphics[scale=1.5]{microservices.png}
 \centering
@@ -70,13 +70,13 @@ In conclusion, this architecture is highly suggested in those use cases where a 
 The architecture was designed to be reusable and extensible following the theory of microservices. That’s why it was way more complex than the final result, with more modules each dedicated to provide a single functionality. The first design provided the following modules:
 \begin{itemize}
 	\item \textit{User Interface Module} : it has been kept in the final application and its functionality is related to serve the web resources that compose the front end of the application
-	\item \textit{Authentication Module} : it was in beginning implemented and then removed because of possible usage compolexity and also because of no real use during the main test. This module was connected to a \textsc{Redis} \footnote{https://redis.io} instance, that is a NoSQL database of key-value type with semi-persistence of the data through snapshots and was used to store the tokens to authenticate users of the application. Since there was need for only one user (me, as admin), the authentication service has been rewritten as angular module \textit{auth.js} for a single user inside the \textit{User Interface Module}. Anyway, it is still possible to add this module to the application for further usages in the future, as it is good practice too keep separated authentication from other functionalities.
+	\item \textit{Authentication Module} : it was in beginning implemented and then removed because of possible usage complexity and also because of no real use during the main test. This module was connected to a \textsc{Redis} \footnote{https://redis.io} instance, that is a NoSQL database of key-value type with semi-persistence of the data through snapshots and was used to store the tokens to authenticate users of the application. Since there was need for only one user (me, as admin), the authentication service has been rewritten as angular module \textit{auth.js} for a single user inside the \textit{User Interface Module}. Anyway, it is still possible to add this module to the application for further usages in the future, as it is good practice to keep separated authentication from other features.
 	\item \textit{MongoDB Resource Module} : is the main module that connects to MongoDB and its functionality is related to perform all the tasks needed for the stress test.
-	\item \textit{Additional Resource Modules} : these modules are all the\textit{n} modules siblings of \textit{MongoDB Resource Module} that could possibly be implemented to support different DBMS for the application. None of them have been actually realized and I decided to show only two in the schema as reminder for the possibilities taken into account at the beginning of the project but discarded for the motivations explained in chapter 2, Apache Cassandra and PostgreSQL with JSON datatype
+	\item \textit{Additional Resource Modules} : these modules are all the\textit{n} modules siblings of \textit{MongoDB Resource Module} that could be implemented to support different DBMS for the application. None of them have been actually realized and I decided to show only two in the schema as reminder for the possibilities taken into account at the beginning of the project but discarded for the motivations explained in chapter 2, Apache Cassandra and PostgreSQL with JSON datatype
 \end{itemize}
 
 \subsection{User Interface module}
-The \textit{UI Module} is a standalone Java Spring application that serves all the static content, libraries and web pages, to a localhost server where the user can login and start using the application. There is a single web page where the content is dynamically loaded using AngularJS routing through modules.
+The \textit{UI Module} is a standalone Java Spring application that serves all the static content, libraries and web pages, to a local host server where the user can login and start using the application. There is a single web page where the content is dynamically loaded using AngularJS routing through modules.
 The Login Page does not allow a non-authenticated user to use the application, and its functionality is provided by \textit{auth.js} angular module. After correct login, it is possible to start navigating other sections.
 \begin{figure}[H]
 \includegraphics[scale=0.5]{login.png}
@@ -84,13 +84,13 @@ The Login Page does not allow a non-authenticated user to use the application, a
 \caption{The Login page.}
 \end{figure}
 The \textit{Home Page} simply introduce the user to the application with a welcoming message.
-The \textit{Status Page} is  a page that launches a REST \footnote{https://en.wikipedia.org/wiki/Representational\_state\_transfer} call to all modules that are supposed to be in the application to check and monitor their status, then it prompt the result on screen. It makes easy to discover if a module, even running on another machine, is not answering allowing the user to quickly resolve the problem.
+The \textit{Status Page} is  a page that launches a REST \footnote{https://en.wikipedia.org/wiki/Representational\_state\_transfer} call to all modules that are supposed to be in the application to check and monitor their status, then it prompts the result on screen. It makes easy to discover if a module, even running on another machine, is not answering allowing the user to quickly resolve the problem.
 \begin{figure}[H]
 \includegraphics[scale=0.5]{status.png}
 \centering
 \caption{The Status page.}
 \end{figure}
-The\textit{MongoDB Page} is the most important of this module and  it is the page where the user can setup the configuration for a new test.
+The\textit{MongoDB Page} is the most important of this module and  it is the page where the user can set up the configuration for a new test.
 It is possible to choose:
 \begin{itemize}
 	\item The\textit{ number of entries} or inserts that has to be performed during the whole test
