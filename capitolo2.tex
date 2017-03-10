@@ -1,6 +1,6 @@
 \chapter{The Choice}
 \label{cha:2}
-In this chapter we explain the motivations that determined  MongoDB as choice for the evaluation, and consequently the commission, among other NoSQL possibilities.
+In this chapter we explain the motivations that determined  MongoDB as our choice for the evaluation, and consequently the commission, among other NoSQL possibilities.
 Following, there is a deep description of many Mongo core features mostly taken from the official documentation that could be a good introduction for interested users.
 
 \section{MongoDB}
@@ -20,8 +20,8 @@ In this section we introduce all the main features offered by Mongo by default, 
 Then we analyze more deeply how Mongo implements those features giving some examples of their usage.
 
 \subsection{BSON data object}
-As explained before Mongo uses the BSON \footnote{Binary JavaScript Object Notation - http://bsonspec.org/} documents that are a binary representation for JSON documents, but with more data types.
-The\textit{\_id} field is reserved to be used as a primary key and its value must be unique in the collection and of any type other than array.
+As explained above, Mongo uses the BSON \footnote{Binary JavaScript Object Notation - http://bsonspec.org/} document format that is a binary representation for JSON documents, but with more data types.
+The \textit{\_id} field is reserved to be used as a primary key and its value must be unique in the collection and of any type other than array.
 There are other restrictions on field names: field names cannot start with the dollar “\$” character and not even with the dot “.” character because Mongo uses \textit{dot notation} to access elements of an array or to access the fields of embedded documents.
 There is a maximum size for BSON documents of 16 Megabytes. This is to ensure that a single document does not use an excessive amount of RAM, since Mongo uses mostly RAM during its execution, or bandwidth while sending data.
 There is of course the possibility to store bigger documents with \textit{GridFS API} \footnote{https://www.compose.com/articles/gridfs-and-mongodb-pros-and-cons} provided by Mongo developer team, but it the case of our evaluation it was not needed as we used a relatively small schema for our default document “Fattura”, shown in the previous example, that is a simplification of the billing documents used in our customer’s software.

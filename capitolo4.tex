@@ -71,8 +71,9 @@ net:
 #snmp:
 \end{lstlisting}
 
-
+\newpage
 The secondary node was running a \textit{mongos} instance instead, that automatically connects to the primary node in case the configuration for 2 nodes is set. \textit{Replica Set} was not enabled because in a benchmark test it would only affect performance and it is usually a production choice where it could provide consistency and durability of the data.
+
 \begin{lstlisting}
 # mongos.conf
 
@@ -166,15 +167,15 @@ Now that we have defined the meaning of those values, we can analyze the most si
 \subsection{Analyzed Tests}
 A total number of 10 tests have been performed using \textsc{MongoDb Performance}, but some of them failed or were not relevant.
 We take in account only \textit{Test1}, \textit{Test4}, \textit{Test6} and \textit{Test10} because for the following reasons the others cannot be relevant.
-Tests from 1 to 3 are not real load test, they did not “stress” Mongo at all, so only one of them is presented as example.
+Tests from 1 to 3 are not real load tests, they did not “stress” Mongo at all, so only one of them is presented as example.
 \textit{Test5} suffered the desynchronization of the OS time clock of a Mongo node with the other of about half an hour, and since Mongo assigns \textit{\_id} using timestamp of the machine and then balances documents between the nodes on a Shard Key that includes by default \textit{\_id} \footnote{This is a good reason to specify a Shard Key on a different field.}, the two nodes lost performance and data were divided approximately 60\% on the first node and 40\% on the second node. 
 Each test  took some hours to run, some of them have scheduled for automatic launch during the night to save time.
-For unknown reasons \textit{Test7} and  \textit{Test9} were incomplete due to an interruption of alimentation of the laptop used to plot data \footnote{The laptop itself was running threads that unfortunately stopped performing operations on Mongo}.
+For unknown reasons, \textit{Test7} and  \textit{Test9} were incomplete due to an interruption of alimentation of the laptop used to plot data \footnote{The laptop itself was running threads that unfortunately stopped performing operations on Mongo}.
 As last, we can ignore \textit{Test8} as the complexity of the query used to stress Mongo was too low with to affect the database performance, resulting in a test similar to \textit{Test4}.
 Anyway, all machines that completely performed their workload have been kept in the analysis because there was no time to repeat the tests before the presentation scheduled date and they still confirmed Mongo efficient performance \footnote{Data were partially comparable}.
 
 \subsection{Results}
-In this table are gathered the most relevant results from the analysis spreadsheet, cleaned from all not necessary columns and details.
+the table gathers the most relevant results from the analysis spreadsheet, cleaned from all unnecessary columns and details.
 %\begin{figure}[H]
 %\includegraphics[scale=0.3]{table.png}
 %\centering
@@ -230,7 +231,7 @@ During this test along with other operations, a "Complex Query" have been automa
 With the progressive increase of \textit{n} as total number of documents in the database, the query takes increasing average time to execute. 
 The following chart represents all execution times of the query over the total executions.
 \begin{figure}[H]
-\includegraphics[scale=0.5]{exec_times_new.png}
+\includegraphics[scale=0.55]{exec_times_new.png}
 \centering
 \caption{Query execution times.}
 \end{figure}
