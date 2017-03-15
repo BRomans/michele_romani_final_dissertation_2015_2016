@@ -25,6 +25,7 @@ The \textit{\_id} field is reserved to be used as a primary key and its value mu
 There are other restrictions on field names: field names cannot start with the dollar “\$” character and not even with the dot “.” character because Mongo uses \textit{dot notation} to access elements of an array or to access the fields of embedded documents.
 There is a maximum size for BSON documents of 16 Megabytes. This is to ensure that a single document does not use an excessive amount of RAM, since Mongo uses mostly RAM during its execution, or bandwidth while sending data.
 There is of course the possibility to store bigger documents with \textit{GridFS API} \footnote{https://www.compose.com/articles/gridfs-and-mongodb-pros-and-cons} provided by Mongo developer team, but it the case of our evaluation it was not needed as we used a relatively small schema for our default document “Fattura”, shown in the previous example, that is a simplification of the billing documents used in our customer’s software.
+\newpage
 Here an example of how a BSON Mongo document looks like, based on the model used in our tests:
 \begin{lstlisting}
 {

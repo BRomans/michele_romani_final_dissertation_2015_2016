@@ -78,6 +78,7 @@
 %% Sezione Ringraziamenti opzionale
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \cleardoublepage
   \input{ringraziamenti}
   \clearpage
   \pagestyle{plain} % nessuna intestazione e pie pagina con numero al centro
@@ -112,8 +113,8 @@
     \begingroup
       % nessuna interruzione di pagina tra capitoli
       % ridefinizione dei comandi di clear page
-      \renewcommand{\cleardoublepage}{} 
-      \renewcommand{\clearpage}{} 
+      %\renewcommand{\cleardoublepage}{} 
+     % \renewcommand{\clearpage}{} 
       % redefinizione del formato del titolo del capitolo
       % da formato
       %   Capitolo X
@@ -124,7 +125,7 @@
       \titleformat{\chapter}
         {\normalfont\Huge\bfseries}{\thechapter}{1em}{}
         
-      \titlespacing*{\chapter}{0pt}{0.59in}{0.02in}
+      \titlespacing*{\chapter}{0pt}{0.50in}{0.02in}
       \titlespacing*{\section}{0pt}{0.20in}{0.02in}
       \titlespacing*{\subsection}{0pt}{0.10in}{0.02in}
       
@@ -151,13 +152,17 @@
       %
       % \input oppure \include
       %
+	\newpage
       \input{capitolo1}
+	\newpage
       \input{capitolo2}
+	\cleardoublepage 
       \input{capitolo3}
-	\newpage
+	\clearpage
       \input{capitolo4}
-	\newpage
+	\cleardoublepage
       \input{capitolo5}
+	
       
       
     \endgroup
@@ -180,6 +185,7 @@
     \nocite{usa}
     \nocite{}
     \bibliographystyle{plain}
+    \cleardoublepage
     \bibliography{biblio}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
